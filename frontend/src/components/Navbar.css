@@ -1,0 +1,126 @@
+/*
+  Navbar.css — styles only for the navigation bar.
+
+  Keeping component styles in separate files means you can find and
+  change Navbar styles without scrolling through a giant global CSS file.
+*/
+
+.navbar {
+  position: fixed;          /* Sticks to the top even when page scrolls */
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  z-index: 100;             /* Sits above all page content */
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* Logo */
+.navbar__logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  text-decoration: none;
+}
+
+.navbar__logo:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+/* Navigation links */
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.navbar__link {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.navbar__link:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Highlight the currently active page link */
+.navbar__link--active {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.navbar__link--btn {
+  padding: 0.45rem 1.1rem;
+  background: var(--accent);
+  color: #fff !important;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.navbar__link--btn:hover {
+  background: var(--accent-dark);
+  text-decoration: none;
+}
+
+/* Mobile hamburger toggle */
+.navbar__toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.navbar__toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+/* On mobile screens, hide the links and show the hamburger */
+@media (max-width: 640px) {
+  .navbar__toggle {
+    display: flex;
+  }
+
+  .navbar__links {
+    display: none;
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    padding: 1.25rem;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+
+  .navbar__links--open {
+    display: flex;
+  }
+}

@@ -1,0 +1,277 @@
+/*
+  global.css — applied to every page in the app.
+
+  WHY these base resets?
+  Browsers ship with their own default styles (margins, padding, box-sizing).
+  Resetting them gives us a predictable blank canvas so designs look the
+  same across Chrome, Firefox, and Safari.
+*/
+
+/* ---- CSS Custom Properties (variables) ----
+   We define the whole color palette and spacing scale once here.
+   Change --accent-color and every button, link, border in the app updates. */
+:root {
+  --accent: #2563eb;          /* Primary blue — buttons, links, highlights */
+  --accent-dark: #1d4ed8;     /* Darker blue for hover states */
+  --accent-light: #eff6ff;    /* Very light blue for subtle backgrounds */
+  --text-primary: #111827;    /* Near-black for headings and body copy */
+  --text-secondary: #6b7280;  /* Grey for captions, labels, metadata */
+  --text-muted: #9ca3af;      /* Lighter grey for placeholders */
+  --border: #e5e7eb;          /* Light border color */
+  --bg: #ffffff;              /* Page background */
+  --bg-soft: #f9fafb;         /* Slightly off-white card/section background */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --radius: 10px;             /* Default border-radius for cards/buttons */
+  --radius-sm: 6px;
+  --navbar-height: 64px;
+}
+
+/* box-sizing: border-box means padding and border are INCLUDED in the element's
+   stated width/height — the default "content-box" behaviour is unintuitive. */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+               Ubuntu, Cantarell, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Make images responsive by default — they never overflow their container */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  transition: background 0.15s, opacity 0.15s, box-shadow 0.15s;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* ---- Utility classes ---- */
+
+/* Constrains content to a readable max-width and centres it */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.section {
+  padding: 3rem 0;
+}
+
+/* Reusable card style */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Primary action button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary:hover {
+  background: var(--accent-dark);
+  text-decoration: none;
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Secondary outline button */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background: var(--accent-light);
+  text-decoration: none;
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.btn-danger:hover {
+  background: #fecaca;
+  text-decoration: none;
+}
+
+/* Star rating display */
+.rating {
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Page-level loading and empty states */
+.state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.state-box p {
+  font-size: 1rem;
+}
+
+/* Inline error message strip */
+.error-strip {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Success strip */
+.success-strip {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Form field wrapper */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  background: var(--bg);
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Price formatting */
+.price {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.price-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Responsive helper — hide on mobile */
+@media (max-width: 640px) {
+  .hide-mobile { display: none !important; }
+}
+/* Appended to global.css — layout shell */
+
+/* app-shell uses flexbox column so the footer is always pushed to the bottom
+   even when page content is short (min-height 100vh = at least full screen). */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* app-main sits below the fixed navbar using padding-top.
+   flex: 1 makes it grow and fill available space above the footer. */
+.app-main {
+  flex: 1;
+  padding-top: var(--navbar-height);
+}

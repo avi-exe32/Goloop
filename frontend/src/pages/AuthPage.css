@@ -1,0 +1,54 @@
+/* Shared styles for Login and Signup pages */
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--navbar-height) - 100px);
+  padding: 2rem 1rem;
+}
+
+.auth-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-box__title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.auth-box__sub {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-top: -0.5rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.auth-form__btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+.auth-box__footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}

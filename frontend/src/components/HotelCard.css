@@ -1,0 +1,82 @@
+.hotel-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.hotel-card:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Fixed-height image wrapper so all cards look uniform in a grid */
+.hotel-card__img-wrap {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+
+.hotel-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* Crop image to fill without stretching */
+  transition: transform 0.3s;
+}
+
+.hotel-card:hover .hotel-card__img {
+  transform: scale(1.04);   /* Subtle zoom on hover */
+}
+
+/* City badge overlaid on the image */
+.hotel-card__city-badge {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 0.6rem;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(4px);
+}
+
+.hotel-card__body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.hotel-card__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  /* Clamp to 2 lines so long names don't break the grid layout */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hotel-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.hotel-card__price {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 1rem;
+}

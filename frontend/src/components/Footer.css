@@ -1,0 +1,40 @@
+.footer {
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: auto;    /* Pushes footer to the bottom when page content is short */
+}
+
+.footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.footer__brand {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.footer__copy {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.footer__links {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.footer__links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.footer__links a:hover {
+  color: var(--accent);
+}

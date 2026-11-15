@@ -1,0 +1,168 @@
+.search-page {
+  padding: 2rem 0 3rem;
+}
+
+.search-page__header {
+  margin-bottom: 2rem;
+}
+
+.search-page__header h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.search-page__header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Layout: sidebar filters on the left, results on the right */
+.search-page__layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* ---- Filters sidebar ---- */
+.filters {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  position: sticky;
+  top: calc(var(--navbar-height) + 1rem);  /* Sticks below the fixed navbar */
+}
+
+.filters__title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--text-primary);
+}
+
+.filters__group {
+  margin-bottom: 1.5rem;
+}
+
+.filters__group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.filters__group input,
+.filters__group select {
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.filters__group input:focus,
+.filters__group select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.filters__price-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.filters__apply-btn {
+  width: 100%;
+  padding: 0.65rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+.filters__apply-btn:hover {
+  background: var(--accent-dark);
+}
+
+.filters__reset-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.filters__reset-btn:hover {
+  background: var(--bg-soft);
+}
+
+/* ---- Results area ---- */
+.results__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.results__count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.results__sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.results__sort label {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.results__sort select {
+  padding: 0.4rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.results__sort select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Grid of hotel cards in results */
+.results__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+/* On mobile, collapse sidebar above results */
+@media (max-width: 768px) {
+  .search-page__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    position: static;
+  }
+}
