@@ -1,20 +1,19 @@
 /*
-  Navbar.css — styles only for the navigation bar.
-
-  Keeping component styles in separate files means you can find and
-  change Navbar styles without scrolling through a giant global CSS file.
+  Navbar.css — Booking.com-style two-row navy navigation.
+  Row 1: brand + currency + auth actions
+  Row 2: sub-navigation tabs (Stays, Flights, etc.)
 */
 
+/* ---- Top bar ---- */
 .navbar {
-  position: fixed;          /* Sticks to the top even when page scrolls */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  z-index: 200;
+  background: var(--navy);
+  /* Height of the top row only — subnav is a separate element below */
   height: var(--navbar-height);
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  z-index: 100;             /* Sits above all page content */
-  box-shadow: var(--shadow-sm);
 }
 
 .navbar__inner {
@@ -22,105 +21,187 @@
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1rem;
+  gap: 1rem;
 }
 
 /* Logo */
 .navbar__logo {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--accent);
-  letter-spacing: -0.5px;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
   text-decoration: none;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
 }
 
 .navbar__logo:hover {
   text-decoration: none;
-  opacity: 0.85;
+  color: #fff;
+  opacity: 0.9;
 }
 
-/* Navigation links */
-.navbar__links {
+/* Right cluster: currency + language + auth buttons */
+.navbar__actions {
   display: flex;
   align-items: center;
-  gap: 1.75rem;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
-.navbar__link {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.navbar__link:hover {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-/* Highlight the currently active page link */
-.navbar__link--active {
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.navbar__link--btn {
-  padding: 0.45rem 1.1rem;
-  background: var(--accent);
-  color: #fff !important;
-  border-radius: var(--radius-sm);
+/* Lightweight ghost buttons in the navbar (currency, language) */
+.navbar__ghost-btn {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  color: #fff;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: default;  /* These are display-only in Phase 3 */
 }
 
-.navbar__link--btn:hover {
-  background: var(--accent-dark);
+/* Auth action buttons (Log in / Register) */
+.navbar__auth-btn {
+  background: transparent;
+  border: 1.5px solid #fff;
+  color: #fff;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s;
 }
 
-/* Mobile hamburger toggle */
+.navbar__auth-btn:hover {
+  background: rgba(255,255,255,0.15);
+  text-decoration: none;
+  color: #fff;
+}
+
+/* Logout button — slightly different shade */
+.navbar__auth-btn--logout {
+  background: rgba(255,255,255,0.12);
+}
+
+/* Logged-in user greeting pill */
+.navbar__user {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Mobile hamburger */
 .navbar__toggle {
   display: none;
   background: none;
-  border: none;
-  padding: 0.4rem;
-  cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.5rem;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
+  cursor: pointer;
 }
 
 .navbar__toggle span {
   display: block;
-  width: 24px;
+  width: 20px;
   height: 2px;
-  background: var(--text-primary);
+  background: #fff;
   border-radius: 2px;
-  transition: transform 0.2s, opacity 0.2s;
 }
 
-/* On mobile screens, hide the links and show the hamburger */
-@media (max-width: 640px) {
-  .navbar__toggle {
-    display: flex;
-  }
+/* ---- Sub-navigation bar ---- */
+.subnav {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+  z-index: 199;
+  background: var(--navy-dark);
+  height: var(--subnav-height);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
 
-  .navbar__links {
+.subnav__inner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;  /* Hide scrollbar on Firefox */
+}
+
+.subnav__inner::-webkit-scrollbar { display: none; }
+
+/* Each sub-nav pill */
+.subnav__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.9rem;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1.5px solid transparent;
+  border-radius: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+  cursor: pointer;
+  background: none;
+}
+
+.subnav__tab:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.5);
+  text-decoration: none;
+}
+
+/* Active tab — white outlined pill */
+.subnav__tab--active {
+  color: #fff;
+  border-color: #fff;
+  font-weight: 700;
+}
+
+.subnav__tab svg {
+  flex-shrink: 0;
+}
+
+/* ---- Mobile styles ---- */
+@media (max-width: 640px) {
+  .navbar__toggle { display: flex; }
+
+  .navbar__actions {
     display: none;
     position: fixed;
     top: var(--navbar-height);
     left: 0;
     right: 0;
-    background: #fff;
+    background: var(--navy-dark);
     flex-direction: column;
-    padding: 1.25rem;
-    gap: 1rem;
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
+    align-items: flex-start;
+    padding: 1rem;
+    gap: 0.75rem;
+    z-index: 198;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
 
-  .navbar__links--open {
-    display: flex;
-  }
+  .navbar__actions--open { display: flex; }
+
+  .navbar__ghost-btn { display: none; }
 }

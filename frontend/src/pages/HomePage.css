@@ -1,141 +1,237 @@
 /*
-  HomePage.css — styles for the hero section and popular destinations grid.
+  HomePage.css — Booking.com-style dense travel landing page.
+  
+  Structure:
+  1. Navy hero with yellow-bordered search bar overlapping the bottom
+  2. Sign-in promo strip
+  3. Trending destinations grid
+  4. Property type browsing row
+  5. Featured stays section
 */
 
 /* ---- Hero ---- */
 .hero {
-  /* Full-viewport-height hero with a gradient overlay on a background image */
-  min-height: 520px;
-  background:
-    linear-gradient(to bottom, rgba(10,20,60,0.55) 0%, rgba(10,20,60,0.35) 100%),
-    url('https://picsum.photos/seed/india-travel/1400/600') center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  padding: 5rem 1.25rem 3rem;
+  background: var(--navy);
+  padding: 2.5rem 0 5.5rem;  /* Extra bottom padding so search bar overlaps cleanly */
+  position: relative;
 }
 
 .hero__content {
-  max-width: 700px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  text-align: center;
-  color: #fff;
+  padding: 0 1rem;
 }
 
 .hero__title {
-  font-size: clamp(1.9rem, 5vw, 3rem);  /* Fluid font size — scales with viewport */
+  font-size: 2rem;
   font-weight: 800;
-  line-height: 1.15;
-  margin-bottom: 0.6rem;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  color: #fff;
+  margin-bottom: 0.4rem;
 }
 
 .hero__subtitle {
-  font-size: 1.1rem;
-  opacity: 0.9;
-  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 1.5rem;
 }
 
-/* ---- Search bar inside hero ---- */
+/* ---- Yellow-bordered search bar ---- */
+/*
+  The search bar is absolutely positioned so it visually overlaps the bottom
+  of the hero and the top of the white content below — the classic Booking.com
+  "bridge" effect that draws the eye straight to the search controls.
+*/
+.search-wrap {
+  position: relative;
+}
+
 .search-bar {
-  background: #fff;
+  display: flex;
+  align-items: stretch;
+  border: 3px solid var(--yellow);  /* Thick yellow border — Booking.com signature */
   border-radius: var(--radius);
-  padding: 1.1rem 1.25rem;
-  display: grid;
-  /* 4 input fields + search button in a row on desktop */
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
-  gap: 0.75rem;
-  align-items: end;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
 }
 
-.search-bar__field {
+/* Each input segment */
+.search-bar__seg {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  justify-content: center;
+  flex: 1;
+  padding: 0.6rem 0.9rem;
+  border-right: 1px solid var(--border);
+  min-width: 0;
+  position: relative;
 }
 
-.search-bar__field label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--text-secondary);
+.search-bar__seg:last-of-type {
+  border-right: none;
+}
+
+.search-bar__label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-primary);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.15rem;
 }
 
-.search-bar__field input {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.6rem 0.8rem;
+.search-bar__input {
+  border: none;
+  outline: none;
   font-size: 0.95rem;
   color: var(--text-primary);
+  background: transparent;
   width: 100%;
-  transition: border-color 0.15s;
+  padding: 0;
 }
 
-.search-bar__field input:focus {
-  outline: none;
-  border-color: var(--accent);
+.search-bar__input::placeholder {
+  color: var(--text-muted);
 }
 
+/* Blue search button */
 .search-bar__btn {
-  padding: 0.65rem 1.4rem;
-  background: var(--accent);
+  flex-shrink: 0;
+  padding: 0 1.75rem;
+  background: var(--action);
   color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1rem;
-  white-space: nowrap;
+  border: none;
+  cursor: pointer;
   transition: background 0.15s;
+  white-space: nowrap;
 }
 
-.search-bar__btn:hover {
-  background: var(--accent-dark);
-}
+.search-bar__btn:hover { background: var(--action-dark); }
 
-/* Stack search bar fields vertically on mobile */
-@media (max-width: 768px) {
+/* Stacked vertically on mobile */
+@media (max-width: 700px) {
   .search-bar {
-    grid-template-columns: 1fr 1fr;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+  }
+  .search-bar__seg {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
   }
   .search-bar__btn {
-    grid-column: 1 / -1;  /* Span all columns */
+    padding: 0.85rem;
+    border-radius: 0;
   }
 }
 
-@media (max-width: 480px) {
-  .search-bar {
-    grid-template-columns: 1fr;
-  }
+/* ---- Main page body — white background ---- */
+.home-body {
+  background: var(--bg);
+  padding-top: 3.5rem;   /* Clears the overlapping search bar */
+  padding-bottom: 3rem;
 }
 
-/* ---- Popular destinations section ---- */
-.destinations {
-  padding: 3.5rem 0;
+/* ---- Sign-in promo strip ---- */
+.promo-strip {
+  background: #EBF3FB;
+  border: 1px solid #c0d9f0;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
+.promo-strip__text h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0.2rem;
+}
+
+.promo-strip__text p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ---- Section header row ---- */
 .section-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1rem;
 }
 
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 800;
+.section-header a {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ---- Destinations grid ---- */
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+/* ---- Property type row ---- */
+.prop-types {
+  margin-bottom: 2.5rem;
+}
+
+.prop-types__row {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+
+.prop-types__row::-webkit-scrollbar { display: none; }
+
+.prop-type-card {
+  flex-shrink: 0;
+  width: 150px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.18s, transform 0.18s;
+  cursor: pointer;
+}
+
+.prop-type-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
+}
+
+.prop-type-card__img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+}
+
+.prop-type-card__label {
+  padding: 0.5rem 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
-.section-link {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-/* Responsive grid — auto-fill columns that are at least 240px wide */
-.destinations__grid {
+/* ---- Featured stays row ---- */
+.featured-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
 }

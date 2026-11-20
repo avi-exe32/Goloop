@@ -1,168 +1,221 @@
+/*
+  SearchPage.css — 25/75 two-column search results layout.
+  Left sidebar: filters  |  Right column: horizontal hotel listing cards
+*/
+
 .search-page {
-  padding: 2rem 0 3rem;
+  padding: 1.5rem 0 3rem;
 }
 
+/* Page header: "Delhi: 12 properties found" */
 .search-page__header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 .search-page__header h1 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
 }
 
 .search-page__header p {
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  font-size: 0.95rem;
 }
 
-/* Layout: sidebar filters on the left, results on the right */
-.search-page__layout {
+/* ---- Two-column layout ---- */
+.search-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
-  gap: 2rem;
+  gap: 1.25rem;
   align-items: start;
 }
 
-/* ---- Filters sidebar ---- */
-.filters {
-  background: var(--bg);
+/* ---- Left sidebar ---- */
+.filter-sidebar {
+  background: #fff;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
   position: sticky;
-  top: calc(var(--navbar-height) + 1rem);  /* Sticks below the fixed navbar */
+  top: calc(var(--total-nav) + 1rem);  /* Sticks just below the fixed nav */
 }
 
-.filters__title {
-  font-size: 1rem;
+/* Map banner at the top of the sidebar */
+.filter-sidebar__map-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--action-light);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
   font-weight: 700;
-  margin-bottom: 1.25rem;
+  color: var(--action);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.filter-sidebar__map-banner:hover {
+  background: #d9ecf8;
+}
+
+/* Filter group within the sidebar */
+.filter-group {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-group:last-child { border-bottom: none; }
+
+.filter-group__title {
+  font-size: 0.85rem;
+  font-weight: 800;
   color: var(--text-primary);
+  margin-bottom: 0.75rem;
 }
 
-.filters__group {
-  margin-bottom: 1.5rem;
-}
-
-.filters__group label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
-}
-
-.filters__group input,
-.filters__group select {
-  width: 100%;
-  padding: 0.55rem 0.8rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  color: var(--text-primary);
-}
-
-.filters__group input:focus,
-.filters__group select:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.filters__price-row {
+/* Price range row: two inputs side-by-side */
+.price-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
 }
 
-.filters__apply-btn {
-  width: 100%;
-  padding: 0.65rem;
-  background: var(--accent);
-  color: #fff;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: 0.95rem;
-  margin-top: 0.5rem;
+.price-input-wrap {
+  position: relative;
 }
 
-.filters__apply-btn:hover {
-  background: var(--accent-dark);
-}
-
-.filters__reset-btn {
-  width: 100%;
-  padding: 0.5rem;
-  background: transparent;
+.price-input-wrap .currency-prefix {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
   color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.price-input-wrap input {
+  width: 100%;
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;  /* left pad for Rs. prefix */
+  border: 1.5px solid var(--border-dark);
+  border-radius: var(--radius);
   font-size: 0.85rem;
-  margin-top: 0.4rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
+  color: var(--text-primary);
 }
 
-.filters__reset-btn:hover {
-  background: var(--bg-soft);
+.price-input-wrap input:focus {
+  outline: none;
+  border-color: var(--action);
 }
 
-/* ---- Results area ---- */
-.results__toolbar {
+/* Checkbox filter row */
+.filter-check {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.25rem;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.filter-check input[type="checkbox"] {
+  accent-color: var(--action);
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.filter-check__label {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.filter-check__count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Filter action buttons */
+.filter-actions {
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius);
+}
+
+/* ---- Right column: results ---- */
+.results-col {}
+
+/* Sort tabs row */
+.results-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.results__count {
-  font-size: 0.9rem;
+.results-count {
+  font-size: 0.85rem;
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.results__sort {
+.sort-tabs {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.4rem;
 }
 
-.results__sort label {
+.sort-tab {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
   font-weight: 600;
+  border: 1.5px solid var(--border-dark);
+  border-radius: 20px;
+  background: #fff;
   color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
 }
 
-.results__sort select {
-  padding: 0.4rem 0.75rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  color: var(--text-primary);
+.sort-tab:hover {
+  border-color: var(--action);
+  color: var(--action);
 }
 
-.results__sort select:focus {
-  outline: none;
-  border-color: var(--accent);
+.sort-tab--active {
+  background: var(--action);
+  color: #fff;
+  border-color: var(--action);
 }
 
-/* Grid of hotel cards in results */
-.results__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.25rem;
+/* Stack of horizontal hotel cards */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* On mobile, collapse sidebar above results */
+/* ---- Responsive: single column on mobile ---- */
 @media (max-width: 768px) {
-  .search-page__layout {
+  .search-layout {
     grid-template-columns: 1fr;
   }
 
-  .filters {
+  .filter-sidebar {
     position: static;
   }
 }

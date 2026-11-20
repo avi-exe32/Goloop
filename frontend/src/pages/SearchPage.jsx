@@ -1,12 +1,13 @@
 /*
-  SearchPage.jsx — shows filtered and sorted hotel search results.
+  SearchPage.jsx — search results with sidebar filters and horizontal hotel cards.
 
-  KEY CONCEPTS:
-  - useSearchParams: React Router hook to read/write URL query parameters
-    (?city=Goa&min_price=2000). The URL IS the state for search — this means
-    users can bookmark or share their search results.
-  - Lifting search params from the URL means pressing browser Back
-    brings you back to the exact same search, not a blank page.
+  KEY CONCEPTS for learning:
+  - useSearchParams: reads/writes URL query params (?city=Goa&sort=price).
+    The URL is the source of truth for what search is active, so users can
+    share or bookmark results, and browser Back works correctly.
+  - Controlled inputs: each filter input is driven by React state. When the
+    user changes a value, setState fires, re-rendering the input with the new
+    value. The URL only updates when "Apply" is clicked or sort changes.
 */
 
 import React, { useState, useEffect } from 'react'
@@ -15,45 +16,62 @@ import { hotelsApi } from '../api/client'
 import HotelCard from '../components/HotelCard'
 import './SearchPage.css'
 
+/* SVG icon for the map banner */
+const IconMap = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+    <line x1="9" y1="3" x2="9" y2="18"/>
+    <line x1="15" y1="6" x2="15" y2="21"/>
+  </svg>
+)
+
+/* Star rating filter options */
+const STAR_OPTIONS = [
+  { label: '5 stars', value: '5'   },
+  { label: '4 stars', value: '4'   },
+  { label: '3 stars', value: '3'   },
+]
+
+/* Common amenity checkboxes — purely cosmetic in Phase 3, wired to API in Phase 5 */
+const AMENITY_OPTIONS = [
+  'Free WiFi', 'Swimming Pool', 'Spa', 'Free Parking', 'Restaurant'
+]
+
 export default function SearchPage() {
   /*
-    useSearchParams gives us read/write access to ?key=value in the URL.
-    searchParams.get('city') reads the value; setSearchParams updates the URL.
-    When the URL changes, React Router re-renders this component, which
-    triggers a new useEffect run and a fresh API call.
+    useSearchParams gives read + write access to the URL's ?key=value string.
+    Reading: searchParams.get('city')
+    Writing: setSearchParams({ city: 'Goa', sort_by: 'price' })
+    Writing REPLACES the whole query string, so we merge carefully.
   */
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // ---- Filter form state — initialised from URL params ----
-  // This way, if the user arrives from the home page search form,
-  // the filter sidebar already reflects their chosen criteria.
-  const [city,     setCity]     = useState(searchParams.get('city') || '')
-  const [minPrice, setMinPrice] = useState(searchParams.get('min_price') || '')
-  const [maxPrice, setMaxPrice] = useState(searchParams.get('max_price') || '')
-  const [minRating,setMinRating]= useState(searchParams.get('min_rating') || '')
-  const [sortBy,   setSortBy]   = useState(searchParams.get('sort_by') || 'price')
+  /* ---- Local filter state — initialised from the URL so values persist on refresh ---- */
+  const [city,       setCity]      = useState(searchParams.get('city')       || '')
+  const [minPrice,   setMinPrice]  = useState(searchParams.get('min_price')  || '')
+  const [maxPrice,   setMaxPrice]  = useState(searchParams.get('max_price')  || '')
+  const [stars,      setStars]     = useState(searchParams.get('min_rating') || '')
+  const [sortBy,     setSortBy]    = useState(searchParams.get('sort_by')    || 'price')
 
-  // ---- Results state ----
+  /* ---- Results state ---- */
   const [hotels,  setHotels]  = useState([])
   const [loading, setLoading] = useState(true)
   const [error,   setError]   = useState(null)
 
   /*
-    This useEffect re-runs whenever the URL search params change.
-    It converts the URL params into an API call, and stores the result.
-
-    WHY depend on searchParams.toString()?
-    useEffect tracks changes by comparing the dependency value.
-    searchParams is an object — objects are never equal in JS even if their
-    contents are the same (e.g. {} !== {}).
-    .toString() gives a string we can compare correctly.
+    useEffect runs after render. The dependency [searchParams.toString()] means:
+    "re-run this effect whenever the URL query string changes."
+    .toString() converts the URLSearchParams object to a string so React can
+    compare it correctly — objects are always !== each other in JS even if they
+    have the same keys, but strings can be compared with ===.
   */
   useEffect(() => {
     setLoading(true)
     setError(null)
 
-    // Pull filter values from the URL (not from local state) so the API call
-    // always matches what's in the URL bar
+    /* Always read filter values FROM THE URL, not from local state.
+       This keeps the API call in sync with what's in the address bar. */
     const params = {
       city:       searchParams.get('city')       || '',
       min_price:  searchParams.get('min_price')  || '',
@@ -63,38 +81,33 @@ export default function SearchPage() {
     }
 
     hotelsApi.search(params)
-      .then(data => {
-        setHotels(data)
-        setLoading(false)
-      })
-      .catch(err => {
-        setError(err.message)
-        setLoading(false)
-      })
-  }, [searchParams.toString()])  // Re-run when URL params change
+      .then(data  => { setHotels(data);  setLoading(false) })
+      .catch(err  => { setError(err.message); setLoading(false) })
 
-  // Apply filters: push values into the URL — this triggers the useEffect above
+  }, [searchParams.toString()])
+
+  /* Push current form state into the URL — triggers the useEffect above */
   function applyFilters(e) {
     e.preventDefault()
     const next = {}
-    if (city)      next.city       = city
-    if (minPrice)  next.min_price  = minPrice
-    if (maxPrice)  next.max_price  = maxPrice
-    if (minRating) next.min_rating = minRating
+    if (city)     next.city       = city
+    if (minPrice) next.min_price  = minPrice
+    if (maxPrice) next.max_price  = maxPrice
+    if (stars)    next.min_rating = stars
     next.sort_by = sortBy
-    setSearchParams(next)   // Updates the URL, triggers re-render + useEffect
+    setSearchParams(next)
   }
 
   function resetFilters() {
-    setCity(''); setMinPrice(''); setMaxPrice(''); setMinRating(''); setSortBy('price')
+    setCity(''); setMinPrice(''); setMaxPrice(''); setStars(''); setSortBy('price')
     setSearchParams({})
   }
 
-  // Sort order changed inline (no need to re-submit the form)
-  function handleSortChange(e) {
-    setSortBy(e.target.value)
+  /* Inline sort change — doesn't require re-submitting the whole form */
+  function handleSort(value) {
+    setSortBy(value)
     const next = Object.fromEntries(searchParams.entries())
-    next.sort_by = e.target.value
+    next.sort_by = value
     setSearchParams(next)
   }
 
@@ -103,127 +116,179 @@ export default function SearchPage() {
   return (
     <div className="search-page container">
 
+      {/* ---- Page heading ---- */}
       <div className="search-page__header">
         <h1>
-          {cityLabel ? `Hotels in ${cityLabel}` : 'All Hotels'}
+          {cityLabel ? `${cityLabel}: hotels` : 'All hotels'}
         </h1>
         <p>
-          {loading ? 'Searching...' : `${hotels.length} ${hotels.length === 1 ? 'property' : 'properties'} found`}
+          {loading
+            ? 'Searching...'
+            : `${hotels.length} ${hotels.length === 1 ? 'property' : 'properties'} found`
+          }
         </p>
       </div>
 
-      <div className="search-page__layout">
+      {/* ---- Two-column layout ---- */}
+      <div className="search-layout">
 
-        {/* ---- Left: Filters sidebar ---- */}
+        {/* ========== LEFT: Filter sidebar ========== */}
         <aside>
-          <form className="filters" onSubmit={applyFilters}>
-            <h2 className="filters__title">Filters</h2>
+          <form className="filter-sidebar" onSubmit={applyFilters}>
 
-            <div className="filters__group">
-              <label htmlFor="f-city">City</label>
-              <input
-                id="f-city"
-                type="text"
-                placeholder="Goa, Delhi..."
-                value={city}
-                onChange={e => setCity(e.target.value)}
-              />
+            {/* Map banner */}
+            <div className="filter-sidebar__map-banner">
+              <IconMap /> Show on map
             </div>
 
-            <div className="filters__group">
-              <label>Price per night (Rs.)</label>
-              <div className="filters__price-row">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  min={0}
-                  value={minPrice}
-                  onChange={e => setMinPrice(e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Max"
-                  min={0}
-                  value={maxPrice}
-                  onChange={e => setMaxPrice(e.target.value)}
-                />
+            {/* Price range */}
+            <div className="filter-group">
+              <div className="filter-group__title">Your budget (per night)</div>
+              <div className="price-inputs">
+                <div className="price-input-wrap">
+                  <span className="currency-prefix">Rs.</span>
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    min={0}
+                    value={minPrice}
+                    onChange={e => setMinPrice(e.target.value)}
+                  />
+                </div>
+                <div className="price-input-wrap">
+                  <span className="currency-prefix">Rs.</span>
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    min={0}
+                    value={maxPrice}
+                    onChange={e => setMaxPrice(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="filters__group">
-              <label htmlFor="f-rating">Min star rating</label>
-              <select
-                id="f-rating"
-                value={minRating}
-                onChange={e => setMinRating(e.target.value)}
-              >
-                <option value="">Any</option>
-                <option value="3">3 and above</option>
-                <option value="4">4 and above</option>
-                <option value="4.5">4.5 and above</option>
-              </select>
+            {/* Star rating checkboxes */}
+            <div className="filter-group">
+              <div className="filter-group__title">Star rating</div>
+              {STAR_OPTIONS.map(({ label, value }) => (
+                <label key={value} className="filter-check">
+                  <input
+                    type="radio"
+                    name="stars"
+                    value={value}
+                    checked={stars === value}
+                    /*
+                      Controlled radio: React state drives which option is selected.
+                      onChange updates stars state; applyFilters pushes it to the URL.
+                    */
+                    onChange={() => setStars(value)}
+                    style={{ accentColor: 'var(--action)' }}
+                  />
+                  <span className="filter-check__label">{label}</span>
+                </label>
+              ))}
+              {stars && (
+                <button
+                  type="button"
+                  onClick={() => setStars('')}
+                  style={{ fontSize: '0.78rem', color: 'var(--action)', background: 'none', border: 'none', padding: '0.25rem 0', cursor: 'pointer', textAlign: 'left' }}
+                >
+                  Clear
+                </button>
+              )}
             </div>
 
-            <button type="submit" className="filters__apply-btn">
-              Apply Filters
-            </button>
-            <button type="button" className="filters__reset-btn" onClick={resetFilters}>
-              Reset
-            </button>
+            {/* Amenities checkboxes (cosmetic in Phase 3) */}
+            <div className="filter-group">
+              <div className="filter-group__title">Facilities</div>
+              {AMENITY_OPTIONS.map(a => (
+                <label key={a} className="filter-check">
+                  <input type="checkbox" />
+                  <span className="filter-check__label">{a}</span>
+                  <span className="filter-check__count">
+                    {Math.floor(Math.random() * 15) + 3}
+                  </span>
+                </label>
+              ))}
+            </div>
+
+            {/* Filter action buttons */}
+            <div className="filter-actions">
+              <button type="submit" className="btn-primary" style={{ fontSize: '0.85rem' }}>
+                Apply
+              </button>
+              <button
+                type="button"
+                onClick={resetFilters}
+                style={{ fontSize: '0.85rem', border: '1.5px solid var(--border-dark)', background: '#fff', borderRadius: 'var(--radius)', cursor: 'pointer', color: 'var(--text-secondary)', fontWeight: 600 }}
+              >
+                Reset
+              </button>
+            </div>
           </form>
         </aside>
 
-        {/* ---- Right: Results ---- */}
-        <div className="results">
+        {/* ========== RIGHT: Results column ========== */}
+        <div className="results-col">
 
-          {/* Sort controls */}
-          <div className="results__toolbar">
-            <span className="results__count">
+          {/* Sort tabs */}
+          <div className="results-toolbar">
+            <span className="results-count">
               {!loading && `${hotels.length} results`}
             </span>
-            <div className="results__sort">
-              <label htmlFor="sort-by">Sort by:</label>
-              <select id="sort-by" value={sortBy} onChange={handleSortChange}>
-                <option value="price">Price: Low to High</option>
-                <option value="rating">Rating: High to Low</option>
-              </select>
+            <div className="sort-tabs">
+              {[
+                { label: 'Top picks',         value: 'rating' },
+                { label: 'Price (low first)', value: 'price'  },
+              ].map(({ label, value }) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={`sort-tab${sortBy === value ? ' sort-tab--active' : ''}`}
+                  onClick={() => handleSort(value)}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Loading state */}
+          {/* Loading */}
           {loading && (
-            <div className="state-box">
-              <p>Searching for hotels...</p>
-            </div>
+            <div className="state-box"><p>Searching for available properties...</p></div>
           )}
 
-          {/* Error state */}
+          {/* Error */}
           {error && (
-            <div className="error-strip">
-              {error}
-            </div>
+            <div className="error-strip">{error}</div>
           )}
 
           {/* Empty state */}
           {!loading && !error && hotels.length === 0 && (
             <div className="state-box">
-              <p>No hotels match your search.</p>
+              <p style={{ fontWeight: 700, fontSize: '1rem' }}>No properties match your search.</p>
               <p>Try a different city or clearing the filters.</p>
-              <button className="btn-secondary" onClick={resetFilters} style={{ marginTop: '1rem' }}>
-                Clear Filters
+              <button className="btn-secondary" onClick={resetFilters} style={{ marginTop: '0.75rem' }}>
+                Clear all filters
               </button>
             </div>
           )}
 
-          {/* Results grid */}
+          {/* Results list — horizontal cards */}
           {!loading && !error && hotels.length > 0 && (
-            <div className="results__grid">
+            <div className="results-list">
               {hotels.map(hotel => (
-                <HotelCard key={hotel.id} hotel={hotel} />
+                /*
+                  variant="horizontal" switches HotelCard to the wide Booking.com
+                  layout: thumbnail | info | price+CTA
+                */
+                <HotelCard key={hotel.id} hotel={hotel} variant="horizontal" />
               ))}
             </div>
           )}
         </div>
+
       </div>
     </div>
   )

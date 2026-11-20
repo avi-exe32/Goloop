@@ -14,7 +14,7 @@ from backend.app.models.user import User
 # OAuth2PasswordBearer tells FastAPI that the token comes from the Authorization
 # header as "Bearer <token>". FastAPI generates an /auth/token endpoint hint in
 # OpenAPI docs automatically; we define our own /auth/login that returns the same shape.
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 def hash_password(plain: str) -> str:

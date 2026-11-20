@@ -1,34 +1,54 @@
 /*
-  global.css — applied to every page in the app.
-
-  WHY these base resets?
-  Browsers ship with their own default styles (margins, padding, box-sizing).
-  Resetting them gives us a predictable blank canvas so designs look the
-  same across Chrome, Firefox, and Safari.
+  global.css — Goloop Design System
+  Modeled after dense travel marketplace layouts (Booking.com style).
+  All design tokens live here as CSS custom properties so a single change
+  propagates everywhere without hunting through component files.
 */
 
-/* ---- CSS Custom Properties (variables) ----
-   We define the whole color palette and spacing scale once here.
-   Change --accent-color and every button, link, border in the app updates. */
+/* ---- Design Tokens ---- */
 :root {
-  --accent: #2563eb;          /* Primary blue — buttons, links, highlights */
-  --accent-dark: #1d4ed8;     /* Darker blue for hover states */
-  --accent-light: #eff6ff;    /* Very light blue for subtle backgrounds */
-  --text-primary: #111827;    /* Near-black for headings and body copy */
-  --text-secondary: #6b7280;  /* Grey for captions, labels, metadata */
-  --text-muted: #9ca3af;      /* Lighter grey for placeholders */
-  --border: #e5e7eb;          /* Light border color */
-  --bg: #ffffff;              /* Page background */
-  --bg-soft: #f9fafb;         /* Slightly off-white card/section background */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
-  --radius: 10px;             /* Default border-radius for cards/buttons */
-  --radius-sm: 6px;
-  --navbar-height: 64px;
+  /* Brand colors */
+  --navy:          #003B95;   /* Primary header / hero background */
+  --navy-dark:     #00276B;   /* Hover / darker navy shade */
+  --yellow:        #FEBB02;   /* Search bar border, highlight accents */
+  --action:        #0071C2;   /* CTA buttons, links, rating badges */
+  --action-dark:   #005999;   /* Button hover */
+  --action-light:  #EBF3FB;   /* Light blue tint for backgrounds */
+
+  /* Semantic colors */
+  --green:         #008009;   /* Free cancellation, member savings */
+  --red:           #D4111E;   /* Urgency text ("Only X rooms left") */
+  --orange:        #E8820C;   /* "Genius" badge, deal labels */
+
+  /* Neutrals */
+  --bg:            #F5F5F5;   /* Page background — slightly warm grey */
+  --card-bg:       #FFFFFF;
+  --border:        #E7E7E7;
+  --border-dark:   #C2C2C2;
+  --text-primary:  #1A1A1A;
+  --text-secondary:#595959;
+  --text-muted:    #8E8E8E;
+
+  /* Shadows — intentionally subtle, no glassmorphism */
+  --shadow-card:   0 2px 8px rgba(0,0,0,0.08);
+  --shadow-hover:  0 4px 16px rgba(0,0,0,0.13);
+
+  /* Layout */
+  --max-width:     1100px;
+  --navbar-height: 56px;
+  --subnav-height: 44px;
+  --total-nav:     calc(var(--navbar-height) + var(--subnav-height));
+
+  /* Spacing */
+  --radius:        4px;
+  --radius-lg:     8px;
 }
 
-/* box-sizing: border-box means padding and border are INCLUDED in the element's
-   stated width/height — the default "content-box" behaviour is unintuitive. */
+/* ---- Reset ---- */
+/*
+  box-sizing: border-box — padding and border are part of the stated width/height.
+  Without this, adding padding to an input makes it wider than expected.
+*/
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -36,42 +56,36 @@
 }
 
 html {
+  font-size: 14px;    /* Compact base size matching dense travel sites */
   scroll-behavior: smooth;
-  font-size: 16px;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-               Ubuntu, Cantarell, sans-serif;
-  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
-  line-height: 1.6;
+  color: var(--text-primary);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Make images responsive by default — they never overflow their container */
 img {
   display: block;
   max-width: 100%;
-  height: auto;
 }
 
 a {
-  color: var(--accent);
+  color: var(--action);
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
-}
+a:hover { text-decoration: underline; }
 
 button {
   cursor: pointer;
   font-family: inherit;
   font-size: 1rem;
   border: none;
-  outline: none;
-  transition: background 0.15s, opacity 0.15s, box-shadow 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 input, select, textarea {
@@ -79,51 +93,50 @@ input, select, textarea {
   font-size: 1rem;
 }
 
-/* ---- Utility classes ---- */
+/* ---- Layout Utilities ---- */
 
-/* Constrains content to a readable max-width and centres it */
 .container {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1rem;
 }
 
-.section {
-  padding: 3rem 0;
-}
-
-/* Reusable card style */
-.card {
+/* App shell: flex column so footer is always pushed to the bottom */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  transition: box-shadow 0.2s, transform 0.2s;
 }
 
-.card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+/* main content sits below the fixed navy bar + subnav */
+.app-main {
+  flex: 1;
+  padding-top: var(--total-nav);
 }
 
-/* Primary action button */
+/* ---- Reusable Components ---- */
+
+/* Primary CTA button — solid blue */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.5rem;
-  background: var(--accent);
+  gap: 0.4rem;
+  padding: 0.65rem 1.4rem;
+  background: var(--action);
   color: #fff;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  white-space: nowrap;
 }
 
 .btn-primary:hover {
-  background: var(--accent-dark);
+  background: var(--action-dark);
   text-decoration: none;
+  color: #fff;
 }
 
 .btn-primary:disabled {
@@ -136,103 +149,83 @@ input, select, textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.4rem;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
   background: transparent;
-  color: var(--accent);
-  border: 1.5px solid var(--accent);
-  border-radius: var(--radius-sm);
+  color: var(--action);
+  border: 1.5px solid var(--action);
+  border-radius: var(--radius);
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .btn-secondary:hover {
-  background: var(--accent-light);
+  background: var(--action-light);
   text-decoration: none;
 }
 
+/* Danger button (cancel booking) */
 .btn-danger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  background: #fee2e2;
-  color: #b91c1c;
-  border: 1px solid #fca5a5;
-  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.9rem;
+  background: #fff0f0;
+  color: var(--red);
+  border: 1px solid #f5c0c0;
+  border-radius: var(--radius);
   font-weight: 600;
   font-size: 0.875rem;
 }
 
-.btn-danger:hover {
-  background: #fecaca;
-  text-decoration: none;
-}
+.btn-danger:hover { background: #ffe0e0; text-decoration: none; }
 
-/* Star rating display */
-.rating {
-  color: #f59e0b;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-/* Page-level loading and empty states */
-.state-box {
-  display: flex;
-  flex-direction: column;
+/* ---- Rating badge (blue square, top-right of card) ---- */
+.rating-badge {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 4rem 1rem;
-  color: var(--text-secondary);
-  text-align: center;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  min-width: 2.2rem;
+  height: 2.2rem;
+  padding: 0 0.4rem;
+  border-radius: var(--radius) var(--radius) var(--radius) 0;
 }
 
-.state-box p {
-  font-size: 1rem;
+/* ---- Section title ---- */
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
 }
 
-/* Inline error message strip */
-.error-strip {
-  background: #fee2e2;
-  color: #b91c1c;
-  border: 1px solid #fca5a5;
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-}
-
-/* Success strip */
-.success-strip {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #6ee7b7;
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-}
-
-/* Form field wrapper */
+/* ---- Form fields ---- */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .form-group label {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 0.65rem 0.9rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.8rem;
+  border: 1.5px solid var(--border-dark);
+  border-radius: var(--radius);
   color: var(--text-primary);
-  background: var(--bg);
-  transition: border-color 0.15s;
+  background: #fff;
   width: 100%;
 }
 
@@ -240,38 +233,76 @@ input, select, textarea {
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--action);
 }
 
-/* Price formatting */
+/* ---- State boxes ---- */
+.state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.error-strip {
+  background: #fff0f0;
+  color: var(--red);
+  border: 1px solid #f5c0c0;
+  border-radius: var(--radius);
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+}
+
+.success-strip {
+  background: #f0faf0;
+  color: var(--green);
+  border: 1px solid #a8d8a8;
+  border-radius: var(--radius);
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* ---- Price display ---- */
 .price {
   font-weight: 700;
   color: var(--text-primary);
+  font-size: 1.3rem;
+}
+
+.price-original {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: line-through;
 }
 
 .price-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
-  font-weight: 400;
 }
 
-/* Responsive helper — hide on mobile */
+/* ---- Tag / badge pills ---- */
+.tag-green {
+  display: inline-block;
+  color: var(--green);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tag-red {
+  display: inline-block;
+  color: var(--red);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ---- Responsive helper ---- */
 @media (max-width: 640px) {
   .hide-mobile { display: none !important; }
-}
-/* Appended to global.css — layout shell */
-
-/* app-shell uses flexbox column so the footer is always pushed to the bottom
-   even when page content is short (min-height 100vh = at least full screen). */
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* app-main sits below the fixed navbar using padding-top.
-   flex: 1 makes it grow and fill available space above the footer. */
-.app-main {
-  flex: 1;
-  padding-top: var(--navbar-height);
 }
