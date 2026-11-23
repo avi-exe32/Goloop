@@ -25,6 +25,7 @@ import HotelDetailPage from './pages/HotelDetailPage'
 import LoginPage       from './pages/LoginPage'
 import SignupPage      from './pages/SignupPage'
 import MyBookingsPage  from './pages/MyBookingsPage'
+import AdminPage       from './pages/AdminPage'
 import NotFoundPage    from './pages/NotFoundPage'
 
 export default function App() {
@@ -52,6 +53,7 @@ export default function App() {
               <Route path="/login"          element={<LoginPage />} />
               <Route path="/signup"         element={<SignupPage />} />
               <Route path="/my-bookings"    element={<MyBookingsPage />} />
+              <Route path="/admin/*"        element={<AdminPage />} />
               {/* Catch-all: any URL that didn't match above shows the 404 page */}
               <Route path="*"              element={<NotFoundPage />} />
             </Routes>
