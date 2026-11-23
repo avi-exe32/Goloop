@@ -25,6 +25,7 @@ import { useAuth } from '../context/AuthContext'
 import AdminHotelsPage   from './AdminHotelsPage'
 import AdminRoomsPage    from './AdminRoomsPage'
 import AdminBookingsPage from './AdminBookingsPage'
+import AdminDashboardPage from './AdminDashboardPage'
 import './AdminPage.css'
 
 /* ---- SVG Icons (no emoji) ---- */
@@ -48,6 +49,12 @@ const IconCalendar = () => (
     <line x1="16" y1="2" x2="16" y2="6"/>
     <line x1="8" y1="2" x2="8" y2="6"/>
     <line x1="3" y1="10" x2="21" y2="10"/>
+  </svg>
+)
+
+const IconActivity = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
   </svg>
 )
 
@@ -103,6 +110,15 @@ export default function AdminPage() {
           >
             <IconCalendar /> All Bookings
           </NavLink>
+
+          <NavLink
+            to="/admin/dashboard"
+            className={({ isActive }) =>
+              'admin-sidebar__link' + (isActive ? ' admin-sidebar__link--active' : '')
+            }
+          >
+            <IconActivity /> Live Dashboard
+          </NavLink>
         </nav>
       </aside>
 
@@ -114,8 +130,9 @@ export default function AdminPage() {
             "index" means this route matches when the parent path is an exact match.
           */}
           <Route index element={<AdminHotelsPage />} />
-          <Route path="rooms"    element={<AdminRoomsPage />} />
-          <Route path="bookings" element={<AdminBookingsPage />} />
+          <Route path="rooms"     element={<AdminRoomsPage />} />
+          <Route path="bookings"  element={<AdminBookingsPage />} />
+          <Route path="dashboard" element={<AdminDashboardPage />} />
         </Routes>
       </main>
 

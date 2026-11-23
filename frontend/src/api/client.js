@@ -119,4 +119,10 @@ export const adminApi = {
   // Bookings
   allBookings: ()         => get('/admin/bookings'),
   cancelBooking: (id)     => patch(`/admin/bookings/${id}/cancel`),
+
+  // Simulator telemetry and controls
+  simulatorStatus: ()           => get('/admin/simulator/status'),
+  simulatorStart:  (data = {})  => post('/admin/simulator/start', data),
+  simulatorStop:   ()           => post('/admin/simulator/stop'),
+  simulatorSpeed:  (speed)      => post('/admin/simulator/speed', { speed }),
 }
