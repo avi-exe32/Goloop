@@ -11,6 +11,7 @@ from backend.app.schemas.hotel import (
     RoomCreate, RoomUpdate, RoomOut,
 )
 from backend.app.schemas.booking import BookingOut
+from backend.app.schemas.user import UserOut
 from backend.app.services.auth import get_current_admin
 from backend.app.services.booking import get_all_bookings, cancel_booking
 
@@ -200,6 +201,30 @@ def admin_add_image(
     db.commit()
     db.refresh(image)
     return {"id": image.id, "image_url": image.image_url}
+
+
+#------  get user details--------
+@router.get("/users/{user_id}", response_model=UserOut)
+def admin_get_user(
+    user_id : int,
+    db : Session =  Depends(get_db),
+    _:User=Depends(get_current_admin),
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+    return user
+
+#------  get all user details--------
+@router.get("/users", response_model=List[UserOut])
+def admin_get_all_user(
+    db : Session =  Depends(get_db),
+    _:User=Depends(get_current_admin),
+):
+    user = db.query(User).all()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No users avilable")
+    return user
 
 
 # ----- Helpers -----

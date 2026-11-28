@@ -83,3 +83,4 @@ def login_oauth2(
 def me(current_user: User = Depends(get_current_user)):
     """Return the authenticated user's profile."""
     return UserOut.model_validate(current_user)
+

@@ -27,6 +27,7 @@ import SignupPage      from './pages/SignupPage'
 import MyBookingsPage  from './pages/MyBookingsPage'
 import AdminPage       from './pages/AdminPage'
 import NotFoundPage    from './pages/NotFoundPage'
+import ErrorBoundary   from './components/ErrorBoundary'
 
 export default function App() {
   return (
@@ -46,17 +47,19 @@ export default function App() {
             Routes renders only the first <Route> whose path matches the current URL.
           */}
           <main className="app-main">
-            <Routes>
-              <Route path="/"               element={<HomePage />} />
-              <Route path="/search"         element={<SearchPage />} />
-              <Route path="/hotels/:id"     element={<HotelDetailPage />} />
-              <Route path="/login"          element={<LoginPage />} />
-              <Route path="/signup"         element={<SignupPage />} />
-              <Route path="/my-bookings"    element={<MyBookingsPage />} />
-              <Route path="/admin/*"        element={<AdminPage />} />
-              {/* Catch-all: any URL that didn't match above shows the 404 page */}
-              <Route path="*"              element={<NotFoundPage />} />
-            </Routes>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/"               element={<HomePage />} />
+                <Route path="/search"         element={<SearchPage />} />
+                <Route path="/hotels/:id"     element={<HotelDetailPage />} />
+                <Route path="/login"          element={<LoginPage />} />
+                <Route path="/signup"         element={<SignupPage />} />
+                <Route path="/my-bookings"    element={<MyBookingsPage />} />
+                <Route path="/admin/*"        element={<AdminPage />} />
+                {/* Catch-all: any URL that didn't match above shows the 404 page */}
+                <Route path="*"              element={<NotFoundPage />} />
+              </Routes>
+            </ErrorBoundary>
           </main>
 
           <Footer />

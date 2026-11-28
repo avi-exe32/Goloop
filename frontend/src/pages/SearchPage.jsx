@@ -199,18 +199,19 @@ export default function SearchPage() {
               )}
             </div>
 
-            {/* Amenities checkboxes (cosmetic in Phase 3) */}
+            {/* Amenities checkboxes */}
             <div className="filter-group">
               <div className="filter-group__title">Facilities</div>
-              {AMENITY_OPTIONS.map(a => (
-                <label key={a} className="filter-check">
-                  <input type="checkbox" />
-                  <span className="filter-check__label">{a}</span>
-                  <span className="filter-check__count">
-                    {Math.floor(Math.random() * 15) + 3}
-                  </span>
-                </label>
-              ))}
+              {AMENITY_OPTIONS.map((a, idx) => {
+                const count = [18, 12, 9, 21, 14][idx] || 10
+                return (
+                  <label key={a} className="filter-check">
+                    <input type="checkbox" />
+                    <span className="filter-check__label">{a}</span>
+                    <span className="filter-check__count">{count}</span>
+                  </label>
+                )
+              })}
             </div>
 
             {/* Filter action buttons */}

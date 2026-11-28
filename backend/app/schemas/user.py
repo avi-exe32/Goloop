@@ -15,6 +15,8 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+class UserUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=2, max_length=100)
 
 class UserOut(BaseModel):
     id: int

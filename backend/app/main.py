@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.database import engine, Base
-from backend.app.routers import auth, hotels, bookings, admin, events
+from backend.app.routers import auth, hotels, bookings, admin, events,users
 
 # Create all tables that don't yet exist in the database.
 # In production you would use Alembic migrations instead, but for this learning
@@ -29,6 +29,7 @@ app.include_router(auth.router)
 app.include_router(hotels.router)
 app.include_router(bookings.router)
 app.include_router(admin.router)
+app.include_router(users.router)
 app.include_router(events.router)
 
 
